@@ -1,4 +1,4 @@
-# 触发条件：当 Issue 被编辑（包括标签更改）时
+# 触发条件：仅当 Issue 发生了 添加标签 的动作（而不是移除标签），并且 在这次操作之后，该 Issue 的标签列表中包含了 'resolved' 标签时，这个作业才会运行。
 on:
   issues:
     types: [labeled, unlabeled]
