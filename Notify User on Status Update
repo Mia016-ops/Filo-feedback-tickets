@@ -11,7 +11,7 @@ jobs:
     
     # 2. 严格的条件判断：确保事件是 'labeled' 且 标签名为 'status: resolved'
     #    请务必确认您的 GitHub 标签名称是 'status: resolved'
-    if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'status: resolved'
+    if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'resolved'
 
     steps:
       # --- 1. 调试步骤：打印 Issue Body 内容和事件信息 ---
@@ -29,8 +29,7 @@ jobs:
         id: extract_email
         run: |
           # 提取逻辑：查找 '原始用户邮箱:' 这一行，并提取该行最后一个字段 (邮箱地址)
-          EMAIL=$(echo "${{ github.event.issue.body }}" | grep "原始用户邮箱:" | awk '{print $NF}')
-
+          EMAIL=$(echo "${{ github.event.issue.body }}" | grep "邮箱/手机:" | awk '{print $NF}')
           # 确保提取到了邮箱，否则流程失败
           if [ -z "$EMAIL" ]; then
             echo "Error: User email not found in issue body. Stopping job."
