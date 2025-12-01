@@ -38,10 +38,10 @@ jobs:
         if: success() && steps.extract_email.outputs.extracted_email != 'no-reply@example.com'
         with:
           # ... (SMTP 配置不变) ...
-          server_address: ${{ secrets.MAIL_SERVER }}
-          server_port: ${{ secrets.MAIL_PORT }}
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
+          server_address: ${{ secrets.SMTP_HOST }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
           from: ${{ secrets.MAIL_FROM }}
           
           # 使用上一步骤提取的邮箱作为收件人
