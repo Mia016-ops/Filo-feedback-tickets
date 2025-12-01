@@ -12,41 +12,24 @@ jobs:
       contains(github.event.issue.labels.*.name, 'resolved')
     runs-on: ubuntu-latest
     
-    steps:
-    
+    steps:    
     - name: 📩 Extract Email from Issue Body (Conditional)
       id: extract_email
       run: |
-      
-        ISSUE_BODY="${{ github.event.issue.body }}"
-
-        
-        LINE_FROM=$(echo "$ISSUE_BODY" | sed -n '2p')
-
-        
-        LINE_REPLY_TO=$(echo "$ISSUE_BODY" | sed -n '3p')
-
-        
-        TARGET_LINE=""
-
-        
-        if echo "$LINE_FROM" | grep -iq "Support"; then
-          
+        ISSUE_BODY="${{ github.event.issue.body }}"        
+        LINE_FROM=$(echo "$ISSUE_BODY" | sed -n '2p')        
+        LINE_REPLY_TO=$(echo "$ISSUE_BODY" | sed -n '3p')        
+        TARGET_LINE=""        
+        if echo "$LINE_FROM" | grep -iq "Support"; then          
           TARGET_LINE="$LINE_REPLY_TO"
           echo "Info: 'From' field contains 'support@filomail.com'. Targeting 'Reply-To' line (Line 3)."
-        else
-          
+        else        
           TARGET_LINE="$LINE_FROM"
           echo "Info: 'From' field does not contain 'support@filomail.com'. Targeting 'From' line (Line 2)."
         fi
-
        
-        EMAIL_REGEX='([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)'
-
-        
-        email=$(echo "$TARGET_LINE" | grep -o -E "$EMAIL_REGEX")
-        
-        
+        EMAIL_REGEX='([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)'        
+        email=$(echo "$TARGET_LINE" | grep -o -E "$EMAIL_REGEX")       
         if [ -z "$email" ]; then
           echo "::error::Could not find email address in the target line: $TARGET_LINE. Skipping email."
           echo "extracted_email=no-reply@example.com" >> "$GITHUB_OUTPUT"
