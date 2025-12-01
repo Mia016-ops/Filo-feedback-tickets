@@ -27,11 +27,10 @@ jobs:
       - name: Extract User Email
         id: extract_email
         run: |
-          # 使用 grep 查找包含 '邮箱/手机:' 的行，并用 sed 提取冒号后的内容
-          # sed 命令会清除所有空格、换行符和多余的字符，只留下邮箱地址
+          
           EMAIL=$(echo "${{ github.event.issue.body }}" | grep "邮箱/手机:" | head -1 | sed 's/.*邮箱\/手机:\s*//')
           
-          # 进一步清理可能存在的换行或回车符
+          
           EMAIL=$(echo "$EMAIL" | tr -d '\n\r')
 
           if [ -z "$EMAIL" ]; then
