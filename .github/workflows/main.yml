@@ -1,35 +1,38 @@
 # 触发条件：仅当 Issue 发生了 添加标签 的动作（而不是移除标签），并且 在这次操作之后，该 Issue 的标签列表中包含了 'resolved' 标签时，这个作业才会运行。
 on:
-  # 触发条件: 当 Issue 被编辑 (包括标签更改) 时
   issues:
     types: [labeled, unlabeled]
 
 jobs:
   send_email_on_resolved:
-    # 仅在 Issue 标签包含 'resolved' 且 'unlabeled' 事件未发生时运行
     if: |
       github.event.action == 'labeled' &&
       contains(github.event.issue.labels.*.name, 'resolved')
     runs-on: ubuntu-latest
     
-    steps:    
-    - name: 📩 Extract Email from Issue Body (Conditional)
+    steps:
+    - name: Extract Email from Issue Body (Conditional)
       id: extract_email
       run: |
-        ISSUE_BODY="${{ github.event.issue.body }}"        
-        LINE_FROM=$(echo "$ISSUE_BODY" | sed -n '2p')        
-        LINE_REPLY_TO=$(echo "$ISSUE_BODY" | sed -n '3p')        
-        TARGET_LINE=""        
-        if echo "$LINE_FROM" | grep -iq "Support"; then          
+        ISSUE_BODY="${{ github.event.issue.body }}"
+
+        LINE_FROM=$(echo "$ISSUE_BODY" | sed -n '2p')
+        LINE_REPLY_TO=$(echo "$ISSUE_BODY" | sed -n '3p')
+
+        TARGET_LINE=""
+
+        if echo "$LINE_FROM" | grep -iq "Support"; then
           TARGET_LINE="$LINE_REPLY_TO"
-          echo "Info: 'From' field contains 'support@filomail.com'. Targeting 'Reply-To' line (Line 3)."
-        else        
+          echo "Info: 'From' field contains 'Support'. Targeting 'Reply-To' line (Line 3)."
+        else
           TARGET_LINE="$LINE_FROM"
-          echo "Info: 'From' field does not contain 'support@filomail.com'. Targeting 'From' line (Line 2)."
+          echo "Info: 'From' field does not contain 'Support'. Targeting 'From' line (Line 2)."
         fi
-       
-        EMAIL_REGEX='([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)'        
-        email=$(echo "$TARGET_LINE" | grep -o -E "$EMAIL_REGEX")       
+
+        EMAIL_REGEX='([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)'
+
+        email=$(echo "$TARGET_LINE" | grep -o -E "$EMAIL_REGEX")
+        
         if [ -z "$email" ]; then
           echo "::error::Could not find email address in the target line: $TARGET_LINE. Skipping email."
           echo "extracted_email=no-reply@example.com" >> "$GITHUB_OUTPUT"
@@ -42,7 +45,7 @@ jobs:
     
 
       # 2. 发送 Resolved 通知邮件
-      - name: ✉️ Send Resolved Notification Email
+      - name: Send Resolved Notification Email
         uses: dawidd6/action-send-mail@v3
         # 仅在成功提取到邮箱后才运行
         if: success() && steps.extract_email.outputs.extracted_email != 'no-reply@example.com'
