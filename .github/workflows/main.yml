@@ -1,0 +1,62 @@
+# 触发条件：当 Issue 被编辑（包括标签更改）时
+on:
+  issues:
+    types: [labeled, unlabeled]
+
+jobs:
+  send_email_on_resolved:
+    # 仅在 Issue 标签包含 'resolved' 且 'unlabeled' 事件未发生时运行
+    if: |
+      github.event.action == 'labeled' &&
+      contains(github.event.issue.labels.*.name, 'resolved')
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. 提取收件人邮箱
+      - name: 📩 Extract Email from Issue Body
+        id: extract_email
+        run: |
+          # 提取 Issue Body 的第一行
+          first_line=$(echo "${{ github.event.issue.body }}" | head -n 1)
+          # 使用正则表达式从第一行中提取邮件地址（假设邮箱在 ':', '：', ' ' 之后）
+          email=$(echo "$first_line" | grep -o -E '([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)')
+          
+          if [ -z "$email" ]; then
+            echo "::error::Could not find email address in the issue body. Skipping email."
+            # 如果找不到邮件，可以设置为一个不发送的特殊值，或者直接让工作流失败
+            echo "extracted_email=no-reply@example.com" >> $GITHUB_OUTPUT
+          else
+            echo "Extracted email: $email"
+            echo "extracted_email=$email" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      # 2. 发送 Resolved 通知邮件
+      - name: ✉️ Send Resolved Notification Email
+        uses: dawidd6/action-send-mail@v3
+        # 仅在成功提取到邮箱后才运行
+        if: success() && steps.extract_email.outputs.extracted_email != 'no-reply@example.com'
+        with:
+          # ... (SMTP 配置不变) ...
+          server_address: ${{ secrets.MAIL_SERVER }}
+          server_port: ${{ secrets.MAIL_PORT }}
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          from: ${{ secrets.MAIL_FROM }}
+          
+          # 使用上一步骤提取的邮箱作为收件人
+          to: ${{ steps.extract_email.outputs.extracted_email }}
+          
+          # ... (邮件内容配置不变) ...
+          subject: "[Resolved] Issue # ${{ github.event.issue.number }}: ${{ github.event.issue.title }}"
+          html_body: |
+            <p>尊敬的工单提交人，</p>
+            <p>您提交的 GitHub Issue 状态已更新：</p>
+            <ul>
+              <li><strong>Issue 标题:</strong> <a href="${{ github.event.issue.html_url }}">${{ github.event.issue.title }}</a></li>
+              <li><strong>Issue 编号:</strong> #${{ github.event.issue.number }}</li>
+              <li><strong>新状态:</strong> <strong>已解决 (Resolved)</strong></li>
+            </ul>
+            <p><strong><a href="${{ github.event.issue.html_url }}">点击此处查看 Issue 详情</a></strong></p>
+            <br>
+            <p>请注意：此邮件由 GitHub Actions 自动化发送，请勿直接回复。</p>
