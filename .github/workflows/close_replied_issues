@@ -1,0 +1,51 @@
+
+# 监听 issues 事件，特别是当 Issue 被打开或重新打开时
+on:
+  issues:
+    types: [opened, reopened]
+
+# 允许 Action 关闭 Issue 和添加评论 (需要 write 权限)
+permissions:
+  issues: write
+
+jobs:
+  close_issue_if_reply:
+    # 仅对非 PR 的 Issue 运行
+    if: github.event.issue.pull_request == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for Reply Prefix
+        id: check_prefix
+        run: |
+          CURRENT_TITLE="${{ github.event.issue.title }}"
+          
+          # 检查标题是否以 "re:" 或 "RE:" 开头（不区分大小写，后面可以有空格）
+          if [[ "$CURRENT_TITLE" =~ ^[Rr][Ee]:[[:space:]]* ]]; then
+            echo "::set-output name=is_reply::true"
+            echo "Issue title starts with a reply prefix (Re: or RE:)."
+          else
+            echo "::set-output name=is_reply::false"
+            echo "Issue title does not start with a reply prefix."
+          fi
+
+      - name: Add Comment and Close Issue
+        # 仅当标题包含 Re: / RE: 前缀时才执行这一步
+        if: steps.check_prefix.outputs.is_reply == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue_number = context.issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const title = context.payload.issue.title;
+
+            
+            // 关闭 Issue
+            github.rest.issues.update({
+              owner,
+              repo,
+              issue_number,
+              state: 'closed' 
+            });
+            
+            console.log(`Issue #${issue_number} was closed due to reply prefix.`);
