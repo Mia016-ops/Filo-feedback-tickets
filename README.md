@@ -1,38 +1,36 @@
-# 📂 Filo 用户反馈与工单中心
+# 📂 Filo User Feedback & Ticket Center
 
 ---
 
-## 🚀 欢迎
+## 🚀 Welcome
 
-这里是 **Filo** 产品的官方用户反馈与工单管理中心。我们致力于收集、整理和响应用户在使用过程中遇到的问题、建议和需求。
+This is the official user feedback and ticket management center for the **Filo** product. We are dedicated to collecting, organizing, and responding to issues, suggestions, and needs encountered by users during their experience.
 
-**本仓库主要用于：**
+**This repository is primarily used for:**
 
-* 收集用户遇到的 **Bug 报告**。
-* 接收用户提出的 **新功能建议/需求**。
-* 记录和跟踪所有用户提交的 **工单**。
-
----
-
-## 💡 如何提交工单/反馈？
-
-为了更高效地处理您的反馈，请务必使用我们提供的 **Issue 模板** 来创建新的工单。
-
-1.  点击右上角的 **[New issue]** 按钮。
-2.  选择适合您反馈类型的模板：
-    * **🐞 Bug Report (缺陷报告):** 当您发现产品功能不工作或行为异常时使用。
-    * **✨ Feature Request (功能建议):** 当您希望添加新功能或改进现有功能时使用。
-3.  **请务必填写模板中的所有必要信息**（如：重现步骤、环境信息、预期结果等），信息越详细，我们解决问题的速度就越快。
+* Collecting **Bug Reports** encountered by users.
+* Receiving **New Feature Suggestions/Requests** proposed by users.
+* Recording and tracking all user-submitted **Support Tickets**.
 
 ---
 
-## ⚙️ 处理流程与注意事项
+## 💡 How to Submit a Ticket/Feedback
 
-* **工单状态:** 您可以在 Issue 列表中查看您的工单状态和开发团队的最新回复。
-* **重复工单:** 在提交前，请先搜索是否已有类似的 Issue 存在。如果有，请在现有 Issue 下留言补充信息，避免创建重复的工单。
-* **讨论:** 请保持友好和专业的沟通。对于非工单相关的讨论，我们可能会关闭或标记为“非相关”。
-* **响应时间:** 我们会尽快查看和处理所有提交的工单。但请理解，处理时间会因问题的复杂程度和优先级而有所不同。
+To process your feedback more efficiently, please make sure to use the **Issue Templates** we provide when creating a new ticket.
+
+1.  Click the **[New issue]** button in the upper right corner.
+2.  Select the template that fits your feedback type:
+    * **🐞 Bug Report:** Use this when you discover a product feature that is not working or behaving abnormally.
+    * **✨ Feature Request:** Use this when you wish to suggest adding a new feature or improving an existing one.
+3.  **Please ensure all necessary information in the template is filled out** (e.g., reproduction steps, environment details, expected results, etc.). The more detailed the information, the faster we can resolve the issue.
 
 ---
 
-> **注意：** 本仓库代码暂时不具备开源条件。主要作为 Issues 的仓库，待移除非开源代码后将直接把代码开源在此处。（*此段可根据您的实际情况保留或删除，它是对 `iconfont-plus` 截图文字的参考借鉴*）
+## ⚙️ Processing Flow and Notes
+
+* **Ticket Status:** You can check the status of your ticket and the latest replies from the development team in the Issue list.
+* **Duplicate Tickets:** Before submitting, please search to see if a similar Issue already exists. If it does, please comment on the existing Issue to add more information, avoiding the creation of duplicate tickets.
+* **Discussion:** Please maintain friendly and professional communication. For discussions unrelated to support tickets, we may close the issue or mark it as "irrelevant."
+* **Response Time:** We will review and process all submitted tickets as quickly as possible. However, please understand that processing time may vary depending on the complexity and priority of the issue.
+
+---
