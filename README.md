@@ -28,7 +28,7 @@ To process your feedback more efficiently, please be aware of the following two 
 
 ### 2. Submit via Support Email
 
-**Feedback and emails sent to** **`support@filomail.com`** **will be automatically processed and logged as new Issues in this repository for unified tracking and management.**
+Feedback emails sent to** **`support@filomail.com`** **will be automatically processed and logged as new Issues in this repository for unified tracking and management. You will receive email notifications regarding the progress and updates on your ticket.
 
 ---
 
